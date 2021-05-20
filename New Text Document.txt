@@ -1,0 +1,171 @@
+$( document ).ready(function() {
+
+    fetch('http://127.0.0.1:8000/api/show').
+    then(response => response.json()).then(data => display(data));
+
+    // $.ajax({
+    //     url: "https://jsonplaceholder.typicode.com/users",
+    //     type: "GET",
+    //     success: function (data) {
+    //         const tblBody = $('#test tbody');
+    //         data.forEach(element => {
+    //             data1 = `<tr>
+    //                         <td>${element.id}</td>
+    //                         <td>${element.name}</td>
+    //                         <td>${element.username}</td>
+    //                         <td>${element.email}</td>
+    //                         <td class="text-right align-middle">
+    //                             <a href="" class="btn btn-primary">Edit</a>
+    //                             <a href="" role="button" onclick="return confirm('Are you sure you want to delete?')" class="btn btn-danger">Delete</a>
+    //                         </td>
+    //                     </tr>`;   
+    //             tblBody.append(data1);
+    //         });
+    //     },
+    //     error: function(jqXHR, textStatus, errorThrown) {
+    //        console.log(textStatus, errorThrown);
+    //     }
+    // });
+
+});
+
+function display(data){
+
+    const tblBody = $('#test tbody');
+    data.forEach(element => {
+       var id = element.id;
+        data1 = `<tr>
+                    <td>${element.id}</td>
+                    <td>${element.productimage}</td>
+                    <td>${element.productname}</td>
+                    <td>${element.productprice}</td>
+                    <td class="text-right align-middle">
+                        <button onclick="editData(${element.id})" class="btn btn-primary">Edit</button>                  
+                        <button onclick="deleteData(${element.id});location.reload();return confirm('Are you sure you want to delete?')" class="btn btn-danger">Delete</button>
+                    </td>
+                </tr>`;   
+        tblBody.append(data1);
+    });
+}
+
+function deleteData(id){
+    fetch('http://127.0.0.1:8000/api/delete/' + id, {
+    method: 'GET',}).then(res => res.text()).then(res => console.log(res));
+    
+}
+
+
+function createData(json){
+    var nameValue = document.getElementById("name").value;
+    var usernameValue = document.getElementById("username").value;
+    var emailValue = document.getElementById("email").value;
+
+    let _data = {
+        productimage: nameValue,
+        productname: usernameValue,
+        productprice:emailValue
+      }
+      
+      fetch('http://127.0.0.1:8000/api/create', {
+        method: "POST",
+        body: JSON.stringify(_data),
+        headers: {"Content-type": "application/json; charset=UTF-8"}
+      })
+      .then(response => response.json()).then(json => console.log(json)).catch(err => console.log(err));
+      alert("Added Successfully!");
+}
+
+function editData(id){
+    
+
+
+    fetch('http://127.0.0.1:8000/api/edit/'+id).
+    then(response => response.json()).then(data=>editD(data));
+    // console.log(id);
+
+    //     var nameValue = document.getElementById("name").value;
+    //     var usernameValue = document.getElementById("username").value;
+    //     var emailValue = document.getElementById("email").value;
+    
+    //     let _data = {
+    //         productimage: nameValue,
+    //         productname: usernameValue,
+    //         productprice:emailValue
+    //       }
+    
+        // fetch('http://127.0.0.1:8000/api/edit/' + id, {
+        //     method: "GET",
+        //     body: JSON.stringify(_data),
+        //     headers: {"Content-type": "application/json; charset=UTF-8"}
+        //   })
+        //   .then(response => response.json()).then(json => console.log(json)).catch(err => console.log(err));
+        //   alert("Update Successfully!");
+    }
+
+    function editD(data){
+        // var obj = JSON.parse(data);
+        // var datas = [];
+        // datas = data;
+        console.log(data.productname);
+        var pname = data.productname;
+        var pimage = data.productimage;
+        var pprice = data.productprice;
+        // var pname = data.productname;
+        window.location.href = "edit.php?pname="+pname+"&image="+pimage+"&price="+pprice;
+    //    const formBody = $('#main form');
+    //     form = `<h4 class="mb-2">Update Data</h4>
+    //                 <div class="input-group">
+    //                     <div class="input-group-prepend">
+    //                         <span class="input-group-text">Name: </span>
+    //                     </div>
+    //                     <input type="text" required name="name" id="name" value=${productimage}>
+    //                 </div>
+    //                 <br>
+    //                 <div class="input-group">
+    //                     <div class="input-group-prepend">
+    //                         <span class="input-group-text">Username: </span>
+    //                     </div>
+    //                     <input type="text" required name="username" id="username" value=${productname}>
+    //                 </div>
+    //                 <br>
+    //                 <div class="input-group">
+    //                     <div class="input-group-prepend">
+    //                         <span class="input-group-text">Email: </span>
+    //                     </div>
+    //                     <input type="text" required name="email" id="email" value=${productprice}>
+    //                 </div>
+    //                 <a href="index.php" type="button" class="btn btn-secondary float-right mt-4">Close</a>
+    //                 <button onclick="editData()" class="btn btn-primary mt-4">Update</button>`   
+    //      formBody.append(form);
+    }
+
+    // function updateData(id){
+    
+    //     var url = document.URL
+    //     var id = url.substring(url.lastIndexOf('/') + 1);
+    //     console.log(id);
+    //     // var nameValue = document.getElementById("nameU").value;
+    //     // var usernameValue = document.getElementById("usernameU").value;
+    //     // var emailValue = document.getElementById("emailU").value;
+    
+    //     // let _data = {
+    //     //     productimage: nameValue,
+    //     //     productname: usernameValue,
+    //     //     productprice:emailValue
+    //     //   }
+    
+    //     // fetch('http://127.0.0.1:8000/api/update/' + userid, {
+    //     //     method: "POST",
+    //     //     body: JSON.stringify(_data),
+    //     //     headers: {"Content-type": "application/json; charset=UTF-8"}
+    //     //   })
+    //     //   .then(response => response.json()).then(json => console.log(json)).catch(err => console.log(err));
+    //     //   alert("Update Successfully!");
+    
+    // }
+
+  
+    
+
+
+
